@@ -1,0 +1,8 @@
+Priya: Thanks everyone. Let's go over the Q4 launch of the new onboarding experience. We decided to ship the new onboarding flow by November 15.
+Marcus: The backend API for account creation needs a database migration first. I'll finish the migration and deploy the endpoint by next Friday.
+Dana: The mockups for the onboarding flow still need an accessibility review. I will update the Figma prototype by Wednesday.
+Sam: We need to add regression tests for signup before release. I'll build the test automation suite by next Thursday. Is the staging environment stable?
+Lena: The churn model accuracy dropped to 78 percent, which is a concern for the launch metrics dashboard. I will set up an A/B experiment to measure onboarding conversion by next Monday.
+Arjun: Compliance policy requires consent wording in the signup requirements. I'll write the user stories and acceptance criteria by Tuesday.
+Priya: Agreed, we're going with the November 15 launch timeline. There is a risk that the migration could delay the release.
+Marcus: The migration is a blocker for Sam's tests, so I'll share a staging build tomorrow.
