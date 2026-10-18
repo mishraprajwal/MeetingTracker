@@ -26,7 +26,8 @@ Add a role by adding a `Role` entry in [agents.py](meeting_tracker/agents.py).
 |---|---|
 | Transcript `.txt` (`Speaker: text` lines), `.vtt`, `.srt` | Direct. Export from Zoom/Teams/Meet/Otter, etc. |
 | Audio/video recording (`.mp3 .mp4 .m4a .wav .webm`) | Transcribed with OpenAI Whisper (25 MB API limit). |
-| Live recording of calls | Not built in: bots joining meetings need platform-specific APIs (Zoom/Teams/Meet). Use the platform's cloud recording/transcript and feed the file here. |
+| Teams meeting link | Transcript fetched from Microsoft Graph (see below). |
+| Live audio / bot joining calls | Not supported. |
 
 ## Usage
 
@@ -48,3 +49,15 @@ python -m meeting_tracker call.mp4 --roles swe,qa
 ```bash
 pytest
 ```
+
+## Teams transcripts via Microsoft Graph
+
+```bash
+uvicorn meeting_tracker.teams.service:app --port 8000
+curl -X POST localhost:8000/meetings/process -H 'content-type: application/json' \
+  -d '{"join_url": "https://teams.microsoft.com/l/meetup-join/...", "title": "Sprint planning"}'
+```
+
+The service looks up the meeting from its join link, polls Graph for the Teams-generated transcript (up to ~6 min; it appears after the meeting ends), then runs the agent pipeline and posts the role reports. It does not join calls or process audio.
+
+**Requirements:** transcription must be turned on in the meeting. Register an Azure AD app with application permissions `OnlineMeetings.Read.All` and `OnlineMeetingTranscript.Read.All`, grant admin consent, and create an application access policy (`New-CsApplicationAccessPolicy`) for it. Set `TEAMS_TENANT_ID`, `TEAMS_CLIENT_ID`, `TEAMS_CLIENT_SECRET`. Tested with mocks only, not against a real tenant.
